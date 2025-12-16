@@ -4,10 +4,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class BankingApp {
-    // TODO: Move DB credentials to config file or environment variables
     private static final String url = "...";
     private static final String username = "...";
-    private static final String password = "u..";
+    private static final String password = "...";
 
     public static void main (String[] args) throws ClassNotFoundException, SQLException {
         try{
@@ -33,7 +32,7 @@ public class BankingApp {
     public static void userMenu(Scanner scanner, User user, Accounts account, AccountManager accountManager) {
         String email;
         long accountNumber = 0;
-
+//        USER MENU START
         while (true) {
 //          Menu List for Users
             System.out.println("\n---WELCOME TO BANK---\n");
@@ -53,13 +52,23 @@ public class BankingApp {
             switch (optionForUsers) {
 //              REGISTER
                 case 1 -> {
-                    boolean res = user.registerUser();
+                    System.out.print("Full Name: ");
+                    String userFullName = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String userEmail = scanner.nextLine();
+                    System.out.print("Password: ");
+                    String userPassword = scanner.nextLine();
+                    boolean res = user.registerUser(userFullName, userEmail, userPassword);
                     System.out.println(res ? "Registration Successfull!" : "Registration Failed!");
                 }
 
 //              LOGIN
                 case 2 -> {
-                    email = user.loginUser();
+                    System.out.print("Email: ");
+                    String enteredEmail = scanner.nextLine();
+                    System.out.print("Password: ");
+                    String enteredPassword = scanner.nextLine();
+                    email = user.loginUser(enteredEmail, enteredPassword);
                     if (email != null) { //Logged In
                         System.out.println("\n---User Logged In---\n");
                         int flag = bankAccountMenu(scanner, user, account, accountManager, email, accountNumber);
@@ -74,6 +83,10 @@ public class BankingApp {
                     System.out.println("---THANK YOU FOR USING BANKING SYSTEM!!!---");
                     System.out.println("---Exiting System!---");
                     return;
+                }
+
+                default -> {
+                    System.out.println("Invalid Option");
                 }
             }
         }
@@ -114,6 +127,7 @@ public class BankingApp {
         }
 
         accountNumber = account.getAccountNumber(email);
+//        BANK ACCOUNT HOLDER FEATURES LIST
         while (true) {
 //          Menu List for Bank Account Holders
             System.out.println("\n1. Debit Money");
@@ -134,21 +148,69 @@ public class BankingApp {
             }
 
             switch (optionsForBankAccountHolders) {
+
+//                DEBIT MONEY
                 case 1 -> {
-                    System.out.println("TODO : Add Debit Money Feature");
+                    System.out.print("Enter Amount: ");
+                    double amount = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Enter Security Pin: ");
+                    String securityPin = scanner.nextLine();
+
+                    int result = accountManager.debitMoney(accountNumber, amount, securityPin);
+
+                    if (result == 0) System.out.println("Transaction Failed!");
+                    else if (result == 1) System.out.println("Rs."+amount+" credited Successfully");
+                    else if (result == 2) System.out.println("Invalid Security Pin or Account Number");
+                    else System.out.println("Insufficient Balance!");
                 }
+
+//                CREDIT MONEY
                 case 2 -> {
-                    System.out.println("TODO : Add Credit Money Feature");
+                    System.out.print("Enter Amount: ");
+                    double amount = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Enter Security Pin: ");
+                    String securityPin = scanner.nextLine();
+
+                    Boolean result = accountManager.creditMoney(accountNumber, amount, securityPin);
+
+                    if (result == null) System.out.println("Invalid Security Pin or Account Number");
+                    else if (result) System.out.println("Rs."+amount+" credited Successfully");
+                    else System.out.println("Transaction Failed!");
+
                 }
+
+//                TRANSFER MONEY
                 case 3 -> {
-                    System.out.println("TODO : Add Transfer Money Feature");
+                    System.out.print("Enter Receiver Account Number: ");
+                    long receiverAccountNumber = scanner.nextLong();
+                    System.out.print("Enter Amount: ");
+                    double amount = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Enter Security Pin: ");
+                    String securityPin = scanner.nextLine();
+
+                    accountManager.transferMoney(accountNumber, receiverAccountNumber, amount, securityPin);
                 }
+
+//                CHECK BALANCE
                 case 4 -> {
-                    System.out.println("TODO : Add Check Balance Feature");
+                    System.out.print("Enter Security Pin: ");
+                    String securityPin = scanner.nextLine();
+                    Double checkedBalance = accountManager.checkBalance(accountNumber, securityPin);
+                    if (checkedBalance != null) {
+                        System.out.println("Balance: "+ checkedBalance);
+                    } else {
+                        System.out.println("Invalid Pin!");
+                    }
                 }
+
+//                LOG OUT
                 case 5 -> {
                     return 1;
                 }
+
                 default -> {
                     System.out.println("Invalid Option!");
                     System.out.println("Choose Correct Option");

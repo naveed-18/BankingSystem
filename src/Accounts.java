@@ -10,16 +10,16 @@ public class Accounts {
         this.scanner = scanner;
     }
 
-    public long openAccount(long accountNumber, String fullName, String email, double balance, String securityPin) {
+    public long openAccount(long accNumber, String fullName, String email, double balance, String securityPin) {
         throw new UnsupportedOperationException("openAccount not implemented yet");
     }
 
-    public boolean accountExists(String userEmail) {
+    public boolean accountExists(String email) {
         throw new UnsupportedOperationException("accountExists not implemented yet");
     }
 
-    public long getAccountNumber(String userEmail) {
-        throw new UnsupportedOperationException("getAccountNumber not implemented yet");
+    public long getAccountNumber(String email) {
+        throw new UnsupportedOperationException("getAccount not implemented yet");
     }
 
     public long generateAccountNumber() {
