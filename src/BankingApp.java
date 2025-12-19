@@ -160,7 +160,7 @@ public class BankingApp {
                     int result = accountManager.debitMoney(accountNumber, amount, securityPin);
 
                     if (result == 0) System.out.println("Transaction Failed!");
-                    else if (result == 1) System.out.println("Rs."+amount+" credited Successfully");
+                    else if (result == 1) System.out.println("Rs."+amount+" Debited Successfully");
                     else if (result == 2) System.out.println("Invalid Security Pin or Account Number");
                     else System.out.println("Insufficient Balance!");
                 }
